@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace BitBag\SyliusCmsPlugin\Controller;
 
 use BitBag\SyliusCmsPlugin\Entity\MediaInterface;
-use FOS\RestBundle\View\View;
 use Sylius\Bundle\ResourceBundle\Controller\ResourceController;
 use Sylius\Component\Resource\ResourceActions;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -99,16 +98,11 @@ final class MediaController extends ResourceController
 
         $this->get('bitbag_sylius_cms_plugin.controller.helper.form_errors_flash')->addFlashErrors($form);
 
-        $view = View::create()
-            ->setData([
-                'resource' => $media,
-                $this->metadata->getName() => $media,
-                'mediaTemplate' => $mediaTemplate,
-            ])
-            ->setTemplate($configuration->getTemplate(ResourceActions::CREATE . '.html'))
-        ;
-
-        return $this->viewHandler->handle($configuration, $view);
+        return $this->render($configuration->getTemplate(ResourceActions::CREATE . '.html'), [
+            'resource' => $media,
+            $this->metadata->getName() => $media,
+            'mediaTemplate' => $mediaTemplate,
+        ]);
     }
 
     private function resolveFile(MediaInterface $media): void

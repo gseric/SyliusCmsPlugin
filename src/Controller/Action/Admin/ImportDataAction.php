@@ -16,8 +16,8 @@ use BitBag\SyliusCmsPlugin\Controller\Helper\FormErrorsFlashHelperInterface;
 use BitBag\SyliusCmsPlugin\Exception\ImportFailedException;
 use BitBag\SyliusCmsPlugin\Form\Type\ImportType;
 use BitBag\SyliusCmsPlugin\Processor\ImportProcessorInterface;
-use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-final class ImportDataAction
+final class ImportDataAction extends AbstractController
 {
     /** @var ImportProcessorInterface */
     private $importProcessor;
@@ -91,13 +91,8 @@ final class ImportDataAction
             return new RedirectResponse($referer);
         }
 
-        $view = View::create()
-            ->setData([
-                'form' => $form->createView(),
-            ])
-            ->setTemplate('@BitBagSyliusCmsPlugin/Grid/Form/_importForm.html.twig')
-        ;
-
-        return $this->viewHandler->handle($view);
+        return $this->render('@BitBagSyliusCmsPlugin/Grid/Form/_importForm.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }
